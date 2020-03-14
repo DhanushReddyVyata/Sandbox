@@ -57,4 +57,50 @@ from Department
 group by id
 order by id
 
+--Clever Solution2, without pivot
+Select Ids.Id
+,dJan.revenue as Jan_Revenue
+,dFeb.Revenue as Feb_Revenue
+,dMar.Revenue as Mar_Revenue
+,dApr.Revenue as Apr_Revenue
+,dMay.Revenue as May_revenue
+,dJun.Revenue as Jun_Revenue
+,dJul.Revenue as Jul_Revenue
+,dAug.Revenue as Aug_Revenue
+,dSep.Revenue as Sep_revenue
+,dOct.Revenue as Oct_Revenue
+,dNov.Revenue as Nov_Revenue
+,dDec.Revenue as Dec_Revenue
+from (Select distinct id from Department) Ids
+left join Department dJan on Ids.id = dJan.id and dJan.month = 'Jan'
+left join Department dFeb on Ids.id = dFeb.id and dFeb.month = 'Feb'
+left join Department dMar on Ids.id = dMar.id and dMar.month = 'Mar'
+left join Department dApr on Ids.id = dApr.id and dApr.month = 'Apr'
+left join Department dMay on Ids.id = dMay.id and dMay.month = 'May'
+left join Department dJun on Ids.id = dJun.id and dJun.month = 'Jun'
+left join Department dJul on Ids.id = dJul.id and dJul.month = 'Jul'
+left join Department dAug on Ids.id = dAug.id and dAug.month = 'Aug'
+left join Department dSep on Ids.id = dSep.id and dSep.month = 'Sep'
+left join Department dOct on Ids.id = dOct.id and dOct.month = 'Oct'
+left join Department dNov on Ids.id = dNov.id and dNov.month = 'Nov'
+left join Department dDec on Ids.id = dDec.id and dDec.month = 'Dec'
+
 --Simple Solution, with pivot
+Select id
+,Jan as Jan_Revenue
+,Feb as Feb_Revenue
+,Mar as Mar_Revenue
+,Apr as Apr_Revenue
+,May as May_Revenue
+,Jun as Jun_Revenue
+,Jul as Jul_Revenue
+,Aug as Aug_Revenue
+,Sep as Sep_Revenue
+,Oct as Oct_Revenue
+,Nov as Nov_Revenue
+,Dec as Dec_Revenue
+
+From Department
+Pivot ( sum(revenue)
+       For Month in (Jan,Feb,Mar,Apr,May,Jun,Jul,Aug,Sep,Oct,Nov,Dec)
+) pvt
