@@ -47,14 +47,12 @@ join Department D on Emp.departmentId = D.Id
 where Emp.rnk <=3
 
 --Solution - no dense_rank
----needs to be tested - 3/12
 Select D.Name Department, Emp3.Name Employee, Emp3.Salary
 from (
 select Emp1.Name, Emp1.Salary, Emp1.DepartmentId, count(Emp2.Salary) ct
 from Employee Emp1
-join Employee Emp2 on Emp2.Salary>=Emp1.Salary and Emp1.DepartmentId = Emp2.DepartmentId
+join (Select distinct Salary, departmentId from Employee) Emp2 on Emp2.Salary>=Emp1.Salary and Emp1.DepartmentId = Emp2.DepartmentId
 group by Emp1.Name, Emp1.Salary, Emp1.DepartmentId
 having count(Emp2.Salary) <=3
 ) Emp3
-join Department D on D.Id = Emp3.DepartmentId    
-order by 1
+join Department D on D.Id = Emp3.DepartmentId   
