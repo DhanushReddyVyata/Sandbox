@@ -1,3 +1,6 @@
 Can be done using variables:
 178. Rank Scores
 180. Consecutive Numbers
+
+To redo
+1045. Customers Who Brought All Products - Solution2 is not accepted
