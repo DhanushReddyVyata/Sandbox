@@ -34,16 +34,59 @@ For the sample input, the output is:
 Note:
 If the number of students is odd, there is no need to change the last one's seat.
 */
+-- Solution 1 using case statements
+select
+case 
+    when a.id <> a.max_id and id%2 = 0 then a.before
+    when a.id <> a.max_id and id%2 = 1 then a.after
+    when a.id = a.max_id and max_id%2 = 0 then a.before
+    when a.id = a.max_id and max_id%2 = 1 then max_id
+end as id
+,student
+From (
+select id, student, id+1 as after, id-1 as before, max(id) over() as max_id
+from seat 
+ ) a
+order by 1
 
--- Solution 1
-with maximumid as
-(select max(id) max_id
-from Seats
- )
+-- Solution 2 using case statements and cross join
+select
+case 
+    when a.id <> a.max_id and id%2 = 0 then a.before
+    when a.id <> a.max_id and id%2 = 1 then a.after
+    when a.id = a.max_id and max_id%2 = 0 then a.before
+    when a.id = a.max_id and max_id%2 = 1 then max_id
+end as id
+, student
+From (
+select id, student, id+1 as after, id-1 as before, s.max_id
+from seat 
+cross join (select max(id) max_id from Seat ) s
+ ) a
+ order by 1
+ 
+ --Solution 3 Window functions
 select 
-case when id%2 = 0 and
-select id, student, id+1 as after, id-1 as before--, max(id) as last_id
---,lead(id,1) over(order by id) as after
---,lag(id,1) over(order by id) as before
-from seat
---group by id,student
+case 
+    when id%2 = 0 then a.before
+    when id%2 = 1 then coalesce(a.after,id)
+end as id
+, student
+From (
+select id, student
+,lead(id,1) over(order by id) as after
+,lag(id,1) over(order by id) as before
+from seat 
+ ) a
+order by 1
+
+--Solution 4 simple
+select 
+case 
+    when id%2 = 0 then id-1
+    when id%2 = 1 and id not in (select max(id) from seat) then id+1
+    else id
+end as id
+,student
+from seat 
+order by 1
