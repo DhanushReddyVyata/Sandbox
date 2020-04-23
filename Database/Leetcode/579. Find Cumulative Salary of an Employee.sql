@@ -57,7 +57,8 @@ Employ '3' has two salary records except its most recent pay month '4': month '3
 select E1.id, E1.month, sum(E2.salary) as Salary
 from (
 select *,max(month) over(partition by id) as recent_month
-from Employee) E1
+from Employee
+) E1
 join Employee E2 
 on E1.id = E2.id 
 and E1.month >= E2.month 
